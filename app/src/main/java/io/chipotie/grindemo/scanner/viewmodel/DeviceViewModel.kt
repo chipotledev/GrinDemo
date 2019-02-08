@@ -10,15 +10,16 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import io.chipotie.grindemo.BuildConfig
+import io.chipotie.grindemo.scanner.model.Device
 
 class DeviceViewModel(private val context: Context){
 
     private val TAG = DeviceViewModel::class.java.simpleName
 
-    private var foundDevices : ArrayList<BluetoothDevice> = arrayListOf()
+    private var foundDevices : HashSet<Device> = HashSet()
 
     //LiveData
-    private var devices : MutableLiveData<ArrayList<BluetoothDevice>> = object : MutableLiveData<ArrayList<BluetoothDevice>>(){
+    private var devices : MutableLiveData<ArrayList<Device>> = object : MutableLiveData<ArrayList<Device>>(){
         override fun onActive() {
             context.registerReceiver(receiver, IntentFilter(BluetoothDevice.ACTION_FOUND))
             BluetoothAdapter.getDefaultAdapter()?.startDiscovery()
@@ -43,17 +44,34 @@ class DeviceViewModel(private val context: Context){
             val action = intent?.action
             if (BluetoothDevice.ACTION_FOUND == action) {
                 val device = intent.getParcelableExtra<BluetoothDevice>(BluetoothDevice.EXTRA_DEVICE)
+                val strength : Int = intent.getShortExtra(BluetoothDevice.EXTRA_RSSI, Short.MIN_VALUE).toInt()
 
                 if(device != null) {
-                    foundDevices.add(device)
-                    devices.value = foundDevices
+
+                    val deviceData = Device(device, strength)
+                    foundDevices.add(deviceData)
+                    devices.value = ArrayList(foundDevices)
                 }
             }
         }
     }
 
-    fun getDevices() : LiveData<ArrayList<BluetoothDevice>>{
+    fun getDevices() : LiveData<ArrayList<Device>>{
         return devices
+    }
+
+    fun restartDiscovering(){
+        BluetoothAdapter.getDefaultAdapter()?.cancelDiscovery()
+
+        if(BuildConfig.DEBUG){
+            Log.i(TAG, "Stopping discovering")
+        }
+
+        BluetoothAdapter.getDefaultAdapter()?.startDiscovery()
+
+        if(BuildConfig.DEBUG){
+            Log.i(TAG, "Starting discovering")
+        }
     }
 
 }
