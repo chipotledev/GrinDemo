@@ -23,6 +23,8 @@ class ScannerActivity : AppCompatActivity(){
 
     private var deviceViewModel : DeviceViewModel? = null
 
+    private var adapter: DiscoveredDevicesAdapter? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -36,6 +38,7 @@ class ScannerActivity : AppCompatActivity(){
         }
 
         renderBluetoothControls()
+        setupRecyclerView()
         startDiscovery()
 
     }
@@ -47,7 +50,7 @@ class ScannerActivity : AppCompatActivity(){
 
             Log.i("Devices", ":" + devices.size)
 
-            renderRecyclerView(devices)
+            this.adapter?.updateData(devices)
 
         })
     }
@@ -56,8 +59,8 @@ class ScannerActivity : AppCompatActivity(){
         deviceViewModel?.restartDiscovering()
     }
 
-    private fun renderRecyclerView(devices: ArrayList<Device>){
-        val adapter =  DiscoveredDevicesAdapter(this, devices)
+    private fun setupRecyclerView(){
+        this.adapter =  DiscoveredDevicesAdapter(this, arrayListOf())
         this.binding.rvDiscoveredDevices.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         this.binding.rvDiscoveredDevices.adapter = adapter
     }

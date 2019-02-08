@@ -5,13 +5,15 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import io.chipotie.grindemo.R
 import io.chipotie.grindemo.databinding.ItemFoundDeviceBinding
 import io.chipotie.grindemo.scanner.model.Device
 import io.chipotie.grindemo.util.BindViewHolder
+import io.chipotie.grindemo.util.diff.DiscoverDevicesDiffCallback
 
-class DiscoveredDevicesAdapter(val context: Context, val devices : ArrayList<Device>) : RecyclerView.Adapter<DiscoveredDevicesAdapter.DiscoveredDevicesViewHolder>() {
+class DiscoveredDevicesAdapter(private val context: Context, private val devices : ArrayList<Device>) : RecyclerView.Adapter<DiscoveredDevicesAdapter.DiscoveredDevicesViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DiscoveredDevicesViewHolder {
 
@@ -37,6 +39,13 @@ class DiscoveredDevicesAdapter(val context: Context, val devices : ArrayList<Dev
         }
 
         binding.tvStrength.text = context.getString(R.string.bluetooth_strenght, device.strength)
+    }
+
+    fun updateData(newList: ArrayList<Device>){
+        val diffResult = DiffUtil.calculateDiff(DiscoverDevicesDiffCallback(devices, newList))
+        this.devices.clear()
+        this.devices.addAll(newList)
+        diffResult.dispatchUpdatesTo(this)
     }
 
 

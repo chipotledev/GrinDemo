@@ -16,7 +16,7 @@ class DeviceViewModel(private val context: Context){
 
     private val TAG = DeviceViewModel::class.java.simpleName
 
-    private var foundDevices : HashSet<Device> = HashSet()
+    private var foundDevices : HashMap<String, Device> = HashMap()
 
     //LiveData
     private var devices : MutableLiveData<ArrayList<Device>> = object : MutableLiveData<ArrayList<Device>>(){
@@ -47,13 +47,25 @@ class DeviceViewModel(private val context: Context){
                 val strength : Int = intent.getShortExtra(BluetoothDevice.EXTRA_RSSI, Short.MIN_VALUE).toInt()
 
                 if(device != null) {
-
+                    Log.i(TAG, ": " + device.address)
+                    Log.i(TAG, ": " + device.name)
                     val deviceData = Device(device, strength)
-                    foundDevices.add(deviceData)
-                    devices.value = ArrayList(foundDevices)
+                    foundDevices[device.address] = deviceData
+                    devices.value = getList(foundDevices)
                 }
             }
         }
+    }
+
+    private fun getList(devices: HashMap<String, Device>) : ArrayList<Device>{
+
+        val newList : ArrayList<Device> = arrayListOf()
+        val keys = devices.keys
+        for (key in keys){
+            devices[key]?.let { newList.add(it) }
+        }
+
+        return newList
     }
 
     fun getDevices() : LiveData<ArrayList<Device>>{
