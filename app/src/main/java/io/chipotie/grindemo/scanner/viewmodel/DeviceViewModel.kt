@@ -10,6 +10,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import io.chipotie.grindemo.BuildConfig
+import io.chipotie.grindemo.R
 import io.chipotie.grindemo.scanner.model.Device
 
 class DeviceViewModel(private val context: Context){
@@ -47,9 +48,7 @@ class DeviceViewModel(private val context: Context){
                 val strength : Int = intent.getShortExtra(BluetoothDevice.EXTRA_RSSI, Short.MIN_VALUE).toInt()
 
                 if(device != null) {
-                    Log.i(TAG, ": " + device.address)
-                    Log.i(TAG, ": " + device.name)
-                    val deviceData = Device(device, strength)
+                    val deviceData = Device(device.name, device.address, context!!.getString(R.string.bluetooth_strenght, strength), false)
                     foundDevices[device.address] = deviceData
                     devices.value = getList(foundDevices)
                 }

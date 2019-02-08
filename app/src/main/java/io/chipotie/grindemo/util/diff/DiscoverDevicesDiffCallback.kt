@@ -6,7 +6,7 @@ import io.chipotie.grindemo.scanner.model.Device
 class DiscoverDevicesDiffCallback(val oldList: ArrayList<Device>, val newList: ArrayList<Device>) : DiffUtil.Callback() {
 
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        return oldList[oldItemPosition].device.address == newList[newItemPosition].device.address
+        return oldList[oldItemPosition].address == newList[newItemPosition].address
     }
 
     override fun getOldListSize(): Int {

@@ -32,13 +32,13 @@ class DiscoveredDevicesAdapter(private val context: Context, private val devices
 
         val binding = holder.bindObject
 
-        if(device.device.name != null){
-            binding.tvName.text = device.device.name
+        if(device.name != null){
+            binding.tvName.text = device.name
         }else{
-            binding.tvName.text = device.device.address
+            binding.tvName.text = device.address
         }
 
-        binding.tvStrength.text = context.getString(R.string.bluetooth_strenght, device.strength)
+        binding.tvStrength.text = device.strength
     }
 
     fun updateData(newList: ArrayList<Device>){
