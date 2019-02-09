@@ -4,6 +4,8 @@ import android.bluetooth.BluetoothDevice
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
@@ -105,5 +107,19 @@ class ScannerActivity : AppCompatActivity(), DiscoveredDevicesAdapter.Callback{
     override fun uploadDevice(device: Device) {
         Toast.makeText(this, "Guardando dispositivo", Toast.LENGTH_SHORT).show()
         this.deviceViewModel?.uploadDeviceData(device)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_scanner, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when(item?.itemId){
+            R.id.menu_see_all ->{
+                //Open de new Activity
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 }

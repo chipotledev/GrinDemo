@@ -3,4 +3,5 @@
     <string name="active_bluetooth">Activar</string>
     <string name="give_bluetooth_permissions">Otorga los permisos adecuados para poder ver los dispositivos disponibles.</string>
     <string name="bluetooth_strenght">%d dBm</string>
+    <string name="menu_see_all">Todos</string>
 </resources>
