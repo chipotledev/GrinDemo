@@ -7,7 +7,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import io.chipotie.grindemo.R
-import io.chipotie.grindemo.databinding.ItemFoundDeviceBinding
 import io.chipotie.grindemo.databinding.ItemSaveDeviceBinding
 import io.chipotie.grindemo.model.Device
 import io.chipotie.grindemo.util.BindViewHolder

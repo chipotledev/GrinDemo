@@ -26,6 +26,7 @@ import io.chipotie.grindemo.util.PermissionUtil
 import io.chipotie.grindemo.viewmodel.DeviceViewModel
 import android.net.Uri
 import android.provider.Settings
+import io.chipotie.grindemo.util.ConnectivityUtils
 
 
 class ScannerActivity : AppCompatActivity(), DiscoveredDevicesAdapter.Callback{
@@ -36,6 +37,7 @@ class ScannerActivity : AppCompatActivity(), DiscoveredDevicesAdapter.Callback{
 
     private var adapter: DiscoveredDevicesAdapter? = null
 
+    //Receiver to listen changes on bluetooth settings
     private var bluetoothStateReceiver = object: BroadcastReceiver(){
         override fun onReceive(context: Context?, intent: Intent?) {
             val action = intent?.action
@@ -97,17 +99,20 @@ class ScannerActivity : AppCompatActivity(), DiscoveredDevicesAdapter.Callback{
         startDiscovery()
 
     }
+
+    //Init the live data
     private fun initUploadObservers(){
         this.deviceViewModel?.uploadedDevice?.observe(this, Observer<String> { address ->
             this.deviceViewModel?.confirmUpload(address)
-            Toast.makeText(this, "Guardado Correctamente", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.saved), Toast.LENGTH_SHORT).show()
         })
 
         this.deviceViewModel?.uploadError?.observe(this, Observer<Boolean> {
-            Toast.makeText(this, "Error guardando el dispositivo", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.error_saving), Toast.LENGTH_SHORT).show()
         })
     }
 
+    //Start the discovery of bluetooth devices
     private fun startDiscovery(){
         deviceViewModel?.devices?.observe(this, Observer<ArrayList<Device>>{
                 devices ->
@@ -117,6 +122,7 @@ class ScannerActivity : AppCompatActivity(), DiscoveredDevicesAdapter.Callback{
         })
     }
 
+    //Restar the discovery
     fun restartDiscovery(){
         deviceViewModel?.restartDiscovering()
     }
@@ -149,10 +155,12 @@ class ScannerActivity : AppCompatActivity(), DiscoveredDevicesAdapter.Callback{
         this.binding.llPermissionsSettingsAdvice.visibility = View.GONE
     }
 
+    //Ask permission fot ACCESS_FINE_LOCATION nedeed for Android 6 and above
     fun askPermissions(){
         PermissionUtil.getInstance(this).requestPermission(this)
     }
 
+    //If the user ask for not show the permission dialog again, you should go to settings
     fun askPermissionsFromSettings(){
         val intent = Intent()
         intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
@@ -163,6 +171,7 @@ class ScannerActivity : AppCompatActivity(), DiscoveredDevicesAdapter.Callback{
         startActivity(intent)
     }
 
+    //Open the bluetooth settings
     fun enableBluetooth(){
         val bluetoothIntent = Intent()
         bluetoothIntent.action = android.provider.Settings.ACTION_BLUETOOTH_SETTINGS
@@ -182,7 +191,13 @@ class ScannerActivity : AppCompatActivity(), DiscoveredDevicesAdapter.Callback{
     }
 
     override fun uploadDevice(device: Device) {
-        Toast.makeText(this, "Guardando dispositivo", Toast.LENGTH_SHORT).show()
+
+        if(!ConnectivityUtils.isInternetConnectionAvailable(this)){
+            Toast.makeText(this, getString(R.string.no_internet_message), Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        Toast.makeText(this, getString(R.string.savind), Toast.LENGTH_SHORT).show()
         this.deviceViewModel?.uploadDeviceData(device)
     }
 
@@ -200,6 +215,8 @@ class ScannerActivity : AppCompatActivity(), DiscoveredDevicesAdapter.Callback{
         return super.onOptionsItemSelected(item)
     }
 
+
+    //Lifecycle
     override fun onResume() {
         super.onResume()
         registerReceiver(bluetoothStateReceiver, IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED))

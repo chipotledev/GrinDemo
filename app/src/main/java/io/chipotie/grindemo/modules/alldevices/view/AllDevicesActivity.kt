@@ -13,6 +13,7 @@ import io.chipotie.grindemo.R
 import io.chipotie.grindemo.adapter.AllDevicesAdapter
 import io.chipotie.grindemo.databinding.ActivityAllDevicesBinding
 import io.chipotie.grindemo.model.Device
+import io.chipotie.grindemo.util.ConnectivityUtils
 import io.chipotie.grindemo.viewmodel.AllDevicesViewModel
 import kotlin.collections.ArrayList
 
@@ -32,12 +33,13 @@ class AllDevicesActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_all_devices)
+        binding.view = this
 
         setupRecyclerView()
 
         allDevicesViewModel = AllDevicesViewModel(application)
 
-        allDevicesViewModel?.retrieveAllDevices()
+        this.retrieveDevices()
 
         allDevicesViewModel?.devices?.observe(this, Observer<ArrayList<Device>> { devices ->
             this.currentDevices = devices
@@ -45,6 +47,28 @@ class AllDevicesActivity : AppCompatActivity() {
             this.adapter?.updateData(devices)
         })
 
+        allDevicesViewModel?.errorDevices?.observe( this, Observer<Boolean> {
+            this.binding.internetError.visibility = View.VISIBLE
+            this.binding.pbAllDevices.visibility = View.GONE
+        })
+
+    }
+
+    //Trigger the call for web service
+    fun retrieveDevices(){
+
+        this.binding.pbAllDevices.visibility = View.VISIBLE
+        this.binding.internetError.visibility = View.GONE
+
+        if(!ConnectivityUtils.isInternetConnectionAvailable(this)){
+
+            //Render error
+            this.binding.internetError.visibility = View.VISIBLE
+            this.binding.pbAllDevices.visibility = View.GONE
+            return
+        }
+
+        allDevicesViewModel?.retrieveAllDevices()
     }
 
     private fun setupRecyclerView(){
@@ -73,6 +97,7 @@ class AllDevicesActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
+    //sort the list by date
     private fun sortList(){
         val sortedDevices = this.currentDevices?.sortedWith(compareByDescending { it.createdAt })
         this.adapter?.reloadSortArray(ArrayList(sortedDevices))
