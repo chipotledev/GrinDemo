@@ -14,7 +14,8 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
-        <activity android:name="io.chipotie.grindemo.modules.alldevices.view.AllDevicesActivity">
+        <activity android:name="io.chipotie.grindemo.modules.alldevices.view.AllDevicesActivity"
+                  android:parentActivityName=".modules.scanner.view.ScannerActivity">
         </activity>
         <activity android:name="io.chipotie.grindemo.modules.scanner.view.ScannerActivity">
             <intent-filter>

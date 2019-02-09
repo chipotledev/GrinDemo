@@ -29,6 +29,8 @@ class AllDevicesActivity : AppCompatActivity() {
 
     private var currentDevices : ArrayList<Device>? = null
 
+    private var isFilterActive = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -63,7 +65,12 @@ class AllDevicesActivity : AppCompatActivity() {
         when(item?.itemId){
             R.id.id_sort ->{
                 //Sort
-                sortList()
+                isFilterActive = !isFilterActive
+                if(isFilterActive) {
+                    sortList()
+                }else{
+                    this.adapter?.reloadSortArray(ArrayList(currentDevices))
+                }
             }
         }
         return super.onOptionsItemSelected(item)
