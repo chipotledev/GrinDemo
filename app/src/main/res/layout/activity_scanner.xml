@@ -58,6 +58,78 @@
 
             </LinearLayout>
 
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="?android:attr/actionBarSize"
+                    android:orientation="horizontal"
+                    android:background="@color/grayLight"
+                    android:weightSum="100"
+                    android:id="@+id/ll_permissions_settings_advice"
+                    android:visibility="gone">
+
+                <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="60">
+
+                    <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical"
+                            android:layout_margin="10dp"
+                            android:text="@string/give_bluetooth_permissions"/>
+
+                </RelativeLayout>
+
+                <androidx.appcompat.widget.AppCompatButton
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="40"
+                        android:text="@string/active_bluetooth"
+                        android:textColor="@color/white"
+                        android:layout_gravity="center_vertical"
+                        android:background="@color/colorPrimary"
+                        android:onClick="@{ ()-> view.askPermissionsFromSettings() }"
+                />
+
+            </LinearLayout>
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="?android:attr/actionBarSize"
+                    android:orientation="horizontal"
+                    android:background="@color/grayLight"
+                    android:weightSum="100"
+                    android:id="@+id/ll_enable_bt_advice"
+                    android:visibility="gone">
+
+                <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="60">
+
+                    <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical"
+                            android:layout_margin="10dp"
+                            android:text="@string/enable_bt"/>
+
+                </RelativeLayout>
+
+                <androidx.appcompat.widget.AppCompatButton
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="40"
+                        android:text="@string/active_bluetooth"
+                        android:textColor="@color/white"
+                        android:layout_gravity="center_vertical"
+                        android:background="@color/colorPrimary"
+                        android:onClick="@{ ()-> view.enableBluetooth() }"
+                />
+
+            </LinearLayout>
+
             <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="?android:attr/actionBarSize"

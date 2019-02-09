@@ -1,6 +1,5 @@
 package io.chipotie.grindemo.modules.alldevices.view
 
-import android.bluetooth.BluetoothClass
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
@@ -15,8 +14,6 @@ import io.chipotie.grindemo.adapter.AllDevicesAdapter
 import io.chipotie.grindemo.databinding.ActivityAllDevicesBinding
 import io.chipotie.grindemo.model.Device
 import io.chipotie.grindemo.viewmodel.AllDevicesViewModel
-import java.util.*
-import kotlin.Comparator
 import kotlin.collections.ArrayList
 
 class AllDevicesActivity : AppCompatActivity() {

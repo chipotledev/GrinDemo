@@ -7,4 +7,5 @@
     <string name="bluetooth_strenght">%d dBm</string>
     <string name="menu_see_all">Todos</string>
     <string name="sort_all">Ordenar</string>
+    <string name="enable_bt">Habilita bluetooth para poder ver los dispositivos disponibles.</string>
 </resources>
