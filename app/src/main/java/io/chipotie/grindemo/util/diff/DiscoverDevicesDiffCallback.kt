@@ -3,7 +3,7 @@ package io.chipotie.grindemo.util.diff
 import androidx.recyclerview.widget.DiffUtil
 import io.chipotie.grindemo.scanner.model.Device
 
-class DiscoverDevicesDiffCallback(val oldList: ArrayList<Device>, val newList: ArrayList<Device>) : DiffUtil.Callback() {
+class DiscoverDevicesDiffCallback(private val oldList: ArrayList<Device>, private val newList: ArrayList<Device>) : DiffUtil.Callback() {
 
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
         return oldList[oldItemPosition].address == newList[newItemPosition].address

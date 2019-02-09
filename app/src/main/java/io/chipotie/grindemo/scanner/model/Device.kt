@@ -13,4 +13,4 @@ data class Device(
     @SerializedName("strength")
     val strength: String,
 
-    val saved : Boolean)
+    var saved : Boolean)

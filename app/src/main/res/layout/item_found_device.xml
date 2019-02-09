@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
 
+    <data>
+        <variable
+                name="adapter"
+                type="io.chipotie.grindemo.adapter.DiscoveredDevicesAdapter"/>
+
+        <variable
+                name="item"
+                type="io.chipotie.grindemo.scanner.model.Device"/>
+    </data>
+
     <RelativeLayout
             xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
@@ -23,6 +33,30 @@
                     android:id="@+id/tv_strength"/>
 
         </LinearLayout>
+
+        <ImageButton
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/ic_baseline_cloud_upload_24px"
+                android:layout_centerVertical="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginEnd="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@android:color/transparent"
+                android:onClick="@{ ()-> adapter.uploadDevice( item )}"
+                android:id="@+id/ib_upload"/>
+
+        <ProgressBar
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginEnd="10dp"
+                android:layout_marginRight="10dp"
+                android:visibility="gone"
+                android:id="@+id/pb_uploading"/>
 
     </RelativeLayout>
 

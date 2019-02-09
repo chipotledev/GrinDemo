@@ -1,8 +1,8 @@
 package io.chipotie.grindemo.adapter
 
-import android.bluetooth.BluetoothDevice
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DiffUtil
@@ -13,7 +13,13 @@ import io.chipotie.grindemo.scanner.model.Device
 import io.chipotie.grindemo.util.BindViewHolder
 import io.chipotie.grindemo.util.diff.DiscoverDevicesDiffCallback
 
-class DiscoveredDevicesAdapter(private val context: Context, private val devices : ArrayList<Device>) : RecyclerView.Adapter<DiscoveredDevicesAdapter.DiscoveredDevicesViewHolder>() {
+class DiscoveredDevicesAdapter(private val context: Context, private val devices : ArrayList<Device>, private val callback: Callback) : RecyclerView.Adapter<DiscoveredDevicesAdapter.DiscoveredDevicesViewHolder>() {
+
+    private var originalDevices = ArrayList<Device>()
+
+    init {
+        this.originalDevices.addAll(devices)
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DiscoveredDevicesViewHolder {
 
@@ -31,6 +37,8 @@ class DiscoveredDevicesAdapter(private val context: Context, private val devices
         val device = devices[position]
 
         val binding = holder.bindObject
+        binding.adapter = this
+        binding.item = device
 
         if(device.name != null){
             binding.tvName.text = device.name
@@ -39,15 +47,29 @@ class DiscoveredDevicesAdapter(private val context: Context, private val devices
         }
 
         binding.tvStrength.text = device.strength
+
+        if(device.saved){
+            binding.ibUpload.visibility = View.GONE
+        }
+
     }
 
     fun updateData(newList: ArrayList<Device>){
-        val diffResult = DiffUtil.calculateDiff(DiscoverDevicesDiffCallback(devices, newList))
+        val diffResult = DiffUtil.calculateDiff(DiscoverDevicesDiffCallback(originalDevices, newList))
         this.devices.clear()
         this.devices.addAll(newList)
+        this.originalDevices.addAll(newList)
         diffResult.dispatchUpdatesTo(this)
+    }
+
+    fun uploadDevice(device: Device){
+        this.callback.uploadDevice(device)
     }
 
 
     class DiscoveredDevicesViewHolder(bindObject: ItemFoundDeviceBinding) : BindViewHolder<ItemFoundDeviceBinding>(bindObject)
+
+    interface Callback{
+        fun uploadDevice(device: Device)
+    }
 }

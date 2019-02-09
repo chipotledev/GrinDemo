@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,7 +18,7 @@ import io.chipotie.grindemo.util.PermissionUtil
 import io.chipotie.grindemo.scanner.viewmodel.DeviceViewModel
 
 
-class ScannerActivity : AppCompatActivity(){
+class ScannerActivity : AppCompatActivity(), DiscoveredDevicesAdapter.Callback{
 
     private lateinit var binding : ActivityScannerBinding
 
@@ -32,23 +33,35 @@ class ScannerActivity : AppCompatActivity(){
         binding = DataBindingUtil.setContentView(this,R.layout.activity_scanner)
         binding.view = this
 
+
+        //Check for permissions
         if (!PermissionUtil.getInstance(this).areAllPermissionsForScan()){
             renderPermissionAdvice()
             return
         }
 
+        deviceViewModel = DeviceViewModel(this)
         renderBluetoothControls()
         setupRecyclerView()
+        initUploadObservers()
         startDiscovery()
 
     }
 
-    private fun startDiscovery(){
-        deviceViewModel = DeviceViewModel(this)
-        deviceViewModel?.getDevices()?.observe(this, Observer<ArrayList<Device>>{
-                devices ->
+    private fun initUploadObservers(){
+        this.deviceViewModel?.uploadedDevice?.observe(this, Observer<String> { address ->
+            this.deviceViewModel?.confirmUpload(address)
+            Toast.makeText(this, "Guardado Correctamente", Toast.LENGTH_SHORT).show()
+        })
 
-            Log.i("Devices", ":" + devices.size)
+        this.deviceViewModel?.uploadError?.observe(this, Observer<Boolean> {
+            Toast.makeText(this, "Error guardando el dispositivo", Toast.LENGTH_SHORT).show()
+        })
+    }
+
+    private fun startDiscovery(){
+        deviceViewModel?.devices?.observe(this, Observer<ArrayList<Device>>{
+                devices ->
 
             this.adapter?.updateData(devices)
 
@@ -60,7 +73,7 @@ class ScannerActivity : AppCompatActivity(){
     }
 
     private fun setupRecyclerView(){
-        this.adapter =  DiscoveredDevicesAdapter(this, arrayListOf())
+        this.adapter =  DiscoveredDevicesAdapter(this, arrayListOf(), this)
         this.binding.rvDiscoveredDevices.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         this.binding.rvDiscoveredDevices.adapter = adapter
     }
@@ -87,5 +100,10 @@ class ScannerActivity : AppCompatActivity(){
                 }
             }
         }
+    }
+
+    override fun uploadDevice(device: Device) {
+        Toast.makeText(this, "Guardando dispositivo", Toast.LENGTH_SHORT).show()
+        this.deviceViewModel?.uploadDeviceData(device)
     }
 }

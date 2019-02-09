@@ -12,15 +12,18 @@ import androidx.lifecycle.MutableLiveData
 import io.chipotie.grindemo.BuildConfig
 import io.chipotie.grindemo.R
 import io.chipotie.grindemo.scanner.model.Device
+import io.chipotie.grindemo.scanner.repository.DeviceRepository
 
-class DeviceViewModel(private val context: Context){
+class DeviceViewModel(private val context: Context) : DeviceRepository.UploadCallback{
 
     private val TAG = DeviceViewModel::class.java.simpleName
 
     private var foundDevices : HashMap<String, Device> = HashMap()
 
+    private var uploadedDevices = HashMap<String, Boolean>()
+
     //LiveData
-    private var devices : MutableLiveData<ArrayList<Device>> = object : MutableLiveData<ArrayList<Device>>(){
+    var devices : MutableLiveData<ArrayList<Device>> = object : MutableLiveData<ArrayList<Device>>(){
         override fun onActive() {
             context.registerReceiver(receiver, IntentFilter(BluetoothDevice.ACTION_FOUND))
             BluetoothAdapter.getDefaultAdapter()?.startDiscovery()
@@ -56,6 +59,10 @@ class DeviceViewModel(private val context: Context){
         }
     }
 
+    var uploadedDevice : MutableLiveData<String> = MutableLiveData()
+
+    var uploadError : MutableLiveData<Boolean> = MutableLiveData()
+
     private fun getList(devices: HashMap<String, Device>) : ArrayList<Device>{
 
         val newList : ArrayList<Device> = arrayListOf()
@@ -67,8 +74,8 @@ class DeviceViewModel(private val context: Context){
         return newList
     }
 
-    fun getDevices() : LiveData<ArrayList<Device>>{
-        return devices
+    fun uploadDeviceData(device: Device){
+        DeviceRepository.getInstance(context).uploadDeviceData(device, this)
     }
 
     fun restartDiscovering(){
@@ -83,6 +90,32 @@ class DeviceViewModel(private val context: Context){
         if(BuildConfig.DEBUG){
             Log.i(TAG, "Starting discovering")
         }
+    }
+
+    fun confirmUpload(address: String){
+        this.uploadedDevices[address] = true
+        mergeUploadedDevices()
+    }
+
+    private fun mergeUploadedDevices(){
+        val iterator = getList(foundDevices).iterator()
+
+        while (iterator.hasNext()){
+            val oldValue = iterator.next()
+            if(this.uploadedDevices.containsKey(oldValue.address)){
+                oldValue.saved = true
+            }
+        }
+
+        devices.value = getList(foundDevices)
+    }
+
+    override fun uploadFailed() {
+        this.uploadError.value = true
+    }
+
+    override fun uploadSuccess(address: String) {
+        uploadedDevice.value = address
     }
 
 }
