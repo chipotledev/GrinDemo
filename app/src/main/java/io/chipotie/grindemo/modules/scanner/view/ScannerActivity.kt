@@ -1,9 +1,8 @@
-package io.chipotie.grindemo.scanner.view
+package io.chipotie.grindemo.modules.scanner.view
 
-import android.bluetooth.BluetoothDevice
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -15,9 +14,10 @@ import androidx.recyclerview.widget.RecyclerView
 import io.chipotie.grindemo.R
 import io.chipotie.grindemo.adapter.DiscoveredDevicesAdapter
 import io.chipotie.grindemo.databinding.ActivityScannerBinding
-import io.chipotie.grindemo.scanner.model.Device
+import io.chipotie.grindemo.model.Device
+import io.chipotie.grindemo.modules.alldevices.view.AllDevicesActivity
 import io.chipotie.grindemo.util.PermissionUtil
-import io.chipotie.grindemo.scanner.viewmodel.DeviceViewModel
+import io.chipotie.grindemo.viewmodel.DeviceViewModel
 
 
 class ScannerActivity : AppCompatActivity(), DiscoveredDevicesAdapter.Callback{
@@ -117,7 +117,7 @@ class ScannerActivity : AppCompatActivity(), DiscoveredDevicesAdapter.Callback{
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when(item?.itemId){
             R.id.menu_see_all ->{
-                //Open de new Activity
+                startActivity(Intent(this, AllDevicesActivity::class.java))
             }
         }
         return super.onOptionsItemSelected(item)

@@ -1,4 +1,4 @@
-package io.chipotie.grindemo.scanner.viewmodel
+package io.chipotie.grindemo.viewmodel
 
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
@@ -7,12 +7,11 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.util.Log
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import io.chipotie.grindemo.BuildConfig
 import io.chipotie.grindemo.R
-import io.chipotie.grindemo.scanner.model.Device
-import io.chipotie.grindemo.scanner.repository.DeviceRepository
+import io.chipotie.grindemo.model.Device
+import io.chipotie.grindemo.repository.DeviceRepository
 
 class DeviceViewModel(private val context: Context) : DeviceRepository.UploadCallback{
 
@@ -51,7 +50,13 @@ class DeviceViewModel(private val context: Context) : DeviceRepository.UploadCal
                 val strength : Int = intent.getShortExtra(BluetoothDevice.EXTRA_RSSI, Short.MIN_VALUE).toInt()
 
                 if(device != null) {
-                    val deviceData = Device(device.name, device.address, context!!.getString(R.string.bluetooth_strenght, strength), false)
+                    val deviceData = Device(
+                        device.name,
+                        device.address,
+                        context!!.getString(R.string.bluetooth_strenght, strength),
+                        false,
+                        null
+                    )
                     foundDevices[device.address] = deviceData
                     devices.value = getList(foundDevices)
                 }

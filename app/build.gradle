@@ -16,7 +16,7 @@ android {
     }
     buildTypes {
 
-        debug{
+        debug {
             buildConfigField "String", "ENDPOINT", "\"https://grin-bluetooth-api.herokuapp.com\""
         }
 
@@ -27,7 +27,7 @@ android {
         }
     }
 
-    dataBinding{
+    dataBinding {
         enabled = true
     }
 }

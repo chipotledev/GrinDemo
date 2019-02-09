@@ -1,7 +1,6 @@
 package io.chipotie.grindemo.net
 
-import android.bluetooth.BluetoothClass
-import io.chipotie.grindemo.scanner.model.Device
+import io.chipotie.grindemo.model.Device
 import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.http.Body

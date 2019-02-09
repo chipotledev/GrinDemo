@@ -1,7 +1,8 @@
-package io.chipotie.grindemo.scanner.model
+package io.chipotie.grindemo.model
 
 import android.bluetooth.BluetoothDevice
 import com.google.gson.annotations.SerializedName
+import java.util.*
 
 data class Device(
     @SerializedName("name")
@@ -13,4 +14,7 @@ data class Device(
     @SerializedName("strength")
     val strength: String,
 
-    var saved : Boolean)
+    var saved : Boolean,
+
+    @SerializedName("created_at")
+    var createdAt : Date?)
