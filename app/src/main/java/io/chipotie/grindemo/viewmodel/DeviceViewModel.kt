@@ -50,8 +50,12 @@ class DeviceViewModel(private val context: Context) : DeviceRepository.UploadCal
                 val strength : Int = intent.getShortExtra(BluetoothDevice.EXTRA_RSSI, Short.MIN_VALUE).toInt()
 
                 if(device != null) {
+
+                    //If the bluetooth has no name
+                    val name = if(device.name == null) "Unknown" else device.name
+
                     val deviceData = Device(
-                        device.name,
+                        name,
                         device.address,
                         context!!.getString(R.string.bluetooth_strenght, strength),
                         false,

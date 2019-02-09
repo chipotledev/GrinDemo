@@ -8,7 +8,7 @@ class DateFormatUtils{
     companion object {
 
         fun formateDate(date: Date): String{
-            val simpleDateFormat = SimpleDateFormat("dd-MMM-yyyy mm:HH:ss", Locale.US)
+            val simpleDateFormat = SimpleDateFormat("dd-MMM-yyyy HH:mm:ss", Locale.US)
             return simpleDateFormat.format(date)
         }
     }
